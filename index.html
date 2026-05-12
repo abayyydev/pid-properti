@@ -72,42 +72,42 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <nav class="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200 fixed md:sticky top-0 md:h-screen z-50 flex flex-col justify-between overflow-y-auto">
-        <div>
-            <div class="p-6 border-b border-slate-100">
-                <div class="text-xs font-bold tracking-widest text-blue-600 uppercase mb-1">PID Document</div>
-                <h1 class="text-xl font-bold text-slate-800 leading-tight">KostAds Management System</h1>
-                <div class="mt-2 flex items-center gap-2">
-                    <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
-                    <span class="text-xs text-slate-500">Draft v1.0 | 12 Mei 2026</span>
+    <nav class="w-full md:w-64 lg:w-72 bg-white border-b md:border-b-0 md:border-r border-slate-200 sticky top-0 md:h-screen z-50 flex flex-col justify-between md:overflow-y-auto shadow-sm md:shadow-none">
+        <div class="w-full relative">
+            <div class="p-4 md:p-6 border-b border-slate-100 flex justify-between items-center bg-white relative z-20">
+                <div>
+                    <div class="text-xs font-bold tracking-widest text-blue-600 uppercase mb-1">PID Document</div>
+                    <h1 class="text-lg md:text-xl font-bold text-slate-800 leading-tight">KostAds</h1>
+                    <div class="mt-1 flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                        <span class="text-xs text-slate-500">Draft v1.0 | 12 Mei 2026</span>
+                    </div>
                 </div>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
             </div>
-            <div class="p-4 flex flex-col gap-1" id="nav-menu">
-                <a href="#latar-belakang" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">1. Latar Belakang & Tujuan</a>
-                <a href="#ruang-lingkup" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">2. Ruang Lingkup</a>
-                <a href="#simulasi-analitik" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">3. Simulasi Analitik Dashboard</a>
-                <a href="#arsitektur" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">4. Arsitektur Teknologi</a>
-                <a href="#linimasa" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">5. Linimasa Proyek</a>
-                <a href="#investasi" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">6. Investasi & Ketentuan</a>
+            
+            <div id="nav-content" class="hidden md:flex flex-col p-4 gap-1 shadow-lg md:shadow-none bg-white md:bg-transparent absolute md:static w-full left-0 top-full border-b md:border-b-0 border-slate-200 z-10 max-h-[70vh] overflow-y-auto md:max-h-none">
+                <a href="#latar-belakang" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors">1. Latar Belakang & Tujuan</a>
+                <a href="#ruang-lingkup" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors mt-1 md:mt-0">2. Ruang Lingkup</a>
+                <a href="#simulasi-analitik" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors mt-1 md:mt-0">3. Simulasi Analitik Dashboard</a>
+                <a href="#arsitektur" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors mt-1 md:mt-0">4. Arsitektur Teknologi</a>
+                <a href="#linimasa" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors mt-1 md:mt-0">5. Linimasa Proyek</a>
+                <a href="#investasi" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-lg md:rounded-l-lg md:rounded-r-none hover:bg-slate-50 transition-colors mt-1 md:mt-0">6. Investasi & Ketentuan</a>
             </div>
         </div>
-        <div class="p-6 text-xs text-slate-400 text-center border-t border-slate-100">
+        <div class="hidden md:block p-6 text-xs text-slate-400 text-center border-t border-slate-100">
             Interactive Executive Summary
         </div>
     </nav>
 
-    <main class="flex-1 w-full bg-slate-50 p-6 md:p-12 pb-24">
+    <main class="flex-1 w-full bg-slate-50 p-4 md:p-12 pb-24">
         
-        <div class="max-w-5xl mx-auto space-y-24">
+        <div class="max-w-5xl mx-auto space-y-16 md:space-y-24">
 
-            <section id="latar-belakang" class="scroll-mt-12 pt-8 md:pt-0">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-4">1. Latar Belakang & Tujuan</h2>
-                    <p class="text-slate-600 leading-relaxed text-lg">
-                        Bagian ini menguraikan alasan mendasar mengapa proyek <strong>KostAds</strong> diinisiasi. Dalam industri properti kost, persaingan mendapatkan penyewa sangat ketat. Kecepatan *loading website* dan kemudahan *tracking* konversi Google Ads menjadi kunci efisiensi anggaran pemasaran. Interaksi di bawah ini merangkum empat pilar tujuan utama dari ekosistem digital ini.
-                    </p>
-                </div>
-
+            <section id="latar-belakang" class="scroll-mt-24 md:scroll-mt-12 pt-4 md:pt-0">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="glass-panel p-6 rounded-2xl hover:-translate-y-1 transition-transform cursor-pointer border-l-4 border-l-blue-500">
                         <div class="text-3xl mb-4">&#9889;</div>
@@ -132,7 +132,7 @@
                 </div>
             </section>
 
-            <section id="ruang-lingkup" class="scroll-mt-12">
+            <section id="ruang-lingkup" class="scroll-mt-24 md:scroll-mt-12">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">2. Ruang Lingkup Proyek (Bundle B)</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
@@ -141,16 +141,16 @@
                 </div>
 
                 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                    <div class="flex border-b border-slate-200 bg-slate-50">
-                        <button class="tab-btn active flex-1 py-4 px-6 text-sm font-semibold text-slate-500 transition-colors focus:outline-none" onclick="switchTab('admin')">
+                    <div class="flex flex-col sm:flex-row border-b border-slate-200 bg-slate-50">
+                        <button class="tab-btn active flex-1 py-4 px-4 md:px-6 text-xs sm:text-sm font-semibold text-slate-500 transition-colors focus:outline-none" onclick="switchTab('admin')">
                             &#128274; Modul Admin Dashboard
                         </button>
-                        <button class="tab-btn flex-1 py-4 px-6 text-sm font-semibold text-slate-500 transition-colors focus:outline-none border-l border-slate-200" onclick="switchTab('landing')">
+                        <button class="tab-btn flex-1 py-4 px-4 md:px-6 text-xs sm:text-sm font-semibold text-slate-500 transition-colors focus:outline-none border-t sm:border-t-0 sm:border-l border-slate-200" onclick="switchTab('landing')">
                             &#128241; Modul Landing Page
                         </button>
                     </div>
                     
-                    <div class="p-8">
+                    <div class="p-5 md:p-8">
                         <div id="tab-admin" class="tab-content block animate-fade-in">
                             <h3 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2">Fitur Pengelola Ekosistem</h3>
                             <ul class="space-y-4">
@@ -222,7 +222,7 @@
                 </div>
             </section>
 
-            <section id="simulasi-analitik" class="scroll-mt-12">
+            <section id="simulasi-analitik" class="scroll-mt-24 md:scroll-mt-12">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">3. Simulasi Analitik Dashboard</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
@@ -261,7 +261,7 @@
                 </div>
             </section>
 
-            <section id="arsitektur" class="scroll-mt-12">
+            <section id="arsitektur" class="scroll-mt-24 md:scroll-mt-12">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">4. Arsitektur Teknologi</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
@@ -293,7 +293,7 @@
                 </div>
             </section>
 
-            <section id="linimasa" class="scroll-mt-12">
+            <section id="linimasa" class="scroll-mt-24 md:scroll-mt-12">
                 <div class="mb-8">
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">5. Linimasa Proyek (Project Timeline)</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
@@ -345,7 +345,7 @@
                 </div>
             </section>
 
-            <section id="investasi" class="scroll-mt-12">
+            <section id="investasi" class="scroll-mt-24 md:scroll-mt-12">
                 <div class="mb-8 text-center md:text-left">
                     <h2 class="text-3xl font-bold text-slate-900 mb-4">6. Investasi & Ketentuan</h2>
                     <p class="text-slate-600 leading-relaxed text-lg">
@@ -394,6 +394,25 @@
     </main>
 
     <script>
+        // --- 0. Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navContent = document.getElementById('nav-content');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navContent.classList.toggle('hidden');
+            navContent.classList.toggle('flex');
+        });
+
+        // Close menu when a link is clicked on mobile
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    navContent.classList.add('hidden');
+                    navContent.classList.remove('flex');
+                }
+            });
+        });
+
         // --- 1. Navigation Highlighting Logic ---
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-link');
