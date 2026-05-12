@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive PID: KostAds Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Corporate Tech Trust (Deep Slate, Bright Blue Accents, Clean Whites) -->
+    <!-- Application Structure Plan: The SPA uses a modern dashboard-style scrolling presentation. A fixed left sidebar provides constant navigation, while the main content area is divided into thematic sections corresponding to the PID (Latar Belakang, Ruang Lingkup, Arsitektur, Simulasi Analitik, Linimasa, Investasi). This linear but navigable structure is chosen because it guides the stakeholder through the proposal logically while allowing them to jump to specific details like pricing or features. Interactive tabs and click-to-reveal elements prevent information overload. -->
+    <!-- Visualization & Content Choices: 
+        1. Goals -> Interactive Cards -> Hover reveal -> Clean separation of objectives. NO SVG.
+        2. Features -> Tabbed Interface -> JS switch -> Organizes Admin vs Landing Page features without vertical bloat. NO SVG.
+        3. Analytics -> Chart.js Mixed Chart -> JS dynamic update -> Visualizes the "Cost per Lead" and "Google Ads Integration" value proposition dynamically. Uses strict chart-container. NO SVG.
+        4. Timeline -> Interactive Vertical Stepper -> JS click updates detail text -> Makes the 4-week process explorable. NO SVG.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 50vh;
+            max-height: 450px;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(203, 213, 225, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-link.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-right: 4px solid #2563eb;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .timeline-node {
+            transition: all 0.3s ease;
+        }
+        .timeline-node.active {
+            background-color: #2563eb;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+
+    <nav class="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200 fixed md:sticky top-0 md:h-screen z-50 flex flex-col justify-between overflow-y-auto">
+        <div>
+            <div class="p-6 border-b border-slate-100">
+                <div class="text-xs font-bold tracking-widest text-blue-600 uppercase mb-1">PID Document</div>
+                <h1 class="text-xl font-bold text-slate-800 leading-tight">KostAds Management System</h1>
+                <div class="mt-2 flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+                    <span class="text-xs text-slate-500">Draft v1.0 | 12 Mei 2026</span>
+                </div>
+            </div>
+            <div class="p-4 flex flex-col gap-1" id="nav-menu">
+                <a href="#latar-belakang" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">1. Latar Belakang & Tujuan</a>
+                <a href="#ruang-lingkup" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">2. Ruang Lingkup</a>
+                <a href="#simulasi-analitik" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">3. Simulasi Analitik Dashboard</a>
+                <a href="#arsitektur" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">4. Arsitektur Teknologi</a>
+                <a href="#linimasa" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">5. Linimasa Proyek</a>
+                <a href="#investasi" class="nav-link px-4 py-3 text-sm text-slate-600 rounded-l-lg hover:bg-slate-50 transition-colors">6. Investasi & Ketentuan</a>
+            </div>
+        </div>
+        <div class="p-6 text-xs text-slate-400 text-center border-t border-slate-100">
+            Interactive Executive Summary
+        </div>
+    </nav>
+
+    <main class="flex-1 w-full bg-slate-50 p-6 md:p-12 pb-24">
+        
+        <div class="max-w-5xl mx-auto space-y-24">
+
+            <section id="latar-belakang" class="scroll-mt-12 pt-8 md:pt-0">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">1. Latar Belakang & Tujuan</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Bagian ini menguraikan alasan mendasar mengapa proyek <strong>KostAds</strong> diinisiasi. Dalam industri properti kost, persaingan mendapatkan penyewa sangat ketat. Kecepatan *loading website* dan kemudahan *tracking* konversi Google Ads menjadi kunci efisiensi anggaran pemasaran. Interaksi di bawah ini merangkum empat pilar tujuan utama dari ekosistem digital ini.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl hover:-translate-y-1 transition-transform cursor-pointer border-l-4 border-l-blue-500">
+                        <div class="text-3xl mb-4">&#9889;</div>
+                        <h3 class="font-bold text-lg mb-2">High-Speed Landing Page</h3>
+                        <p class="text-slate-600 text-sm">Menyediakan halaman penawaran berkecepatan tinggi yang disukai algoritma Google Ads untuk meningkatkan *Quality Score* iklan.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl hover:-translate-y-1 transition-transform cursor-pointer border-l-4 border-l-indigo-500">
+                        <div class="text-3xl mb-4">&#128187;</div>
+                        <h3 class="font-bold text-lg mb-2">Manajemen Konten Mandiri</h3>
+                        <p class="text-slate-600 text-sm">Memberikan kontrol penuh kepada pemilik kost untuk mengelola harga, fasilitas, dan foto properti secara mudah melalui CMS.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl hover:-translate-y-1 transition-transform cursor-pointer border-l-4 border-l-teal-500">
+                        <div class="text-3xl mb-4">&#128279;</div>
+                        <h3 class="font-bold text-lg mb-2">Integrasi Tag Instan</h3>
+                        <p class="text-slate-600 text-sm">Memasang <i>Tracking ID</i> Google Ads (AW-XXX) langsung dari Dashboard tanpa perlu menyentuh kode pemrograman sama sekali.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl hover:-translate-y-1 transition-transform cursor-pointer border-l-4 border-l-rose-500">
+                        <div class="text-3xl mb-4">&#128200;</div>
+                        <h3 class="font-bold text-lg mb-2">Pelacakan Konversi WA</h3>
+                        <p class="text-slate-600 text-sm">Melacak setiap klik tombol WhatsApp secara akurat untuk mengukur efektivitas dan <i>Cost per Lead</i> dari kampanye iklan.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ruang-lingkup" class="scroll-mt-12">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">2. Ruang Lingkup Proyek (Bundle B)</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Proyek ini mengadopsi skema <strong>"Bundle B: Full Management"</strong>. Berbeda dengan paket standar, paket ini memberikan fleksibilitas pengelolaan di sisi <i>Back-end</i> sekaligus performa tinggi di sisi <i>Front-end</i>. Silakan navigasikan tab di bawah ini untuk melihat rincian fitur pada masing-masing modul aplikasi.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="flex border-b border-slate-200 bg-slate-50">
+                        <button class="tab-btn active flex-1 py-4 px-6 text-sm font-semibold text-slate-500 transition-colors focus:outline-none" onclick="switchTab('admin')">
+                            &#128274; Modul Admin Dashboard
+                        </button>
+                        <button class="tab-btn flex-1 py-4 px-6 text-sm font-semibold text-slate-500 transition-colors focus:outline-none border-l border-slate-200" onclick="switchTab('landing')">
+                            &#128241; Modul Landing Page
+                        </button>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div id="tab-admin" class="tab-content block animate-fade-in">
+                            <h3 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2">Fitur Pengelola Ekosistem</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Autentikasi Aman</h4>
+                                        <p class="text-sm text-slate-600">Sistem login yang aman dan rahasia khusus pengelola.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Google Ads Tag Manager</h4>
+                                        <p class="text-sm text-slate-600">Form input `Google Tag ID` dan `Conversion Label` yang tersisip dinamis ke Landing Page.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Dynamic Pricing CMS</h4>
+                                        <p class="text-sm text-slate-600">Ubah harga sewa (per bulan/tahun) secara instan tanpa perlu coding.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Gallery Manager & Smart Feedback</h4>
+                                        <p class="text-sm text-slate-600">Sistem CRUD foto kamar dengan notifikasi pop-up SweetAlert2 di tengah layar.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div id="tab-landing" class="tab-content hidden animate-fade-in">
+                            <h3 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2">Fitur Sisi Penyewa (Front-End)</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">High-Performance UI</h4>
+                                        <p class="text-sm text-slate-600">Desain antarmuka modern yang 100% responsif di smartphone dan desktop.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Dynamic Content Synchronization</h4>
+                                        <p class="text-sm text-slate-600">Menampilkan harga dan galeri foto terbaru yang langsung ditarik dari database Admin.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">Direct WhatsApp Conversion</h4>
+                                        <p class="text-sm text-slate-600">Tombol CTA WhatsApp yang sudah terintegrasi secara teknis dengan *trigger event* Google Ads.</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mr-3 mt-0.5">&#10003;</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-800">SEO Dasar & Image Optimization</h4>
+                                        <p class="text-sm text-slate-600">Optimasi gambar otomatis untuk mencegah website lambat dan mendukung pencarian organik.</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="simulasi-analitik" class="scroll-mt-12">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">3. Simulasi Analitik Dashboard</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Salah satu nilai jual utama aplikasi ini adalah visualisasi data yang mudah dipahami pemilik properti. Grafik interaktif di bawah ini adalah simulasi bentuk laporan yang akan tampil di Dashboard Admin. Grafik ini memadukan data Tayangan iklan, Klik, dan Konversi (Lead/WA), sehingga pemilik dapat melihat tren performa harian secara aktual. <i>Arahkan kursor ke grafik untuk melihat detail harian.</i>
+                    </p>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl">
+                    <div class="flex flex-wrap justify-between items-end mb-6">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">Performa Akuisisi Penyewa</h3>
+                            <p class="text-sm text-slate-500">Simulasi Data Google Ads vs Chat WhatsApp (30 Hari Terakhir)</p>
+                        </div>
+                        <div class="flex gap-4 mt-4 sm:mt-0">
+                            <div class="text-right">
+                                <p class="text-xs text-slate-500 font-semibold uppercase">Total Leads</p>
+                                <p class="text-2xl font-bold text-blue-600" id="total-leads-metric">142</p>
+                            </div>
+                            <div class="text-right border-l pl-4">
+                                <p class="text-xs text-slate-500 font-semibold uppercase">Est. Cost/Lead</p>
+                                <p class="text-2xl font-bold text-green-600">Rp 25.4k</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="analyticsChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100 flex items-start gap-3">
+                        <div class="text-blue-500 text-xl">&#8505;</div>
+                        <p class="text-sm text-blue-800">
+                            <strong>Analisis Sistem:</strong> Garis biru (Konversi WA) yang meningkat menunjukkan *landing page* berhasil meyakinkan pengunjung. Dengan integrasi ini, Anda tidak hanya membuang uang untuk klik iklan, tetapi mengukur hasil nyata (calon penyewa yang menghubungi).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="arsitektur" class="scroll-mt-12">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">4. Arsitektur Teknologi</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Membangun ekosistem yang berkinerja tinggi membutuhkan fondasi teknologi modern. Berdasarkan proposal standar, kami menetapkan arsitektur *Decoupled* yang memisahkan sisi tampilan (*Front-end*) dan sisi logika (*Back-end*) untuk mencapai skor Google PageSpeed tertinggi.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="p-5 border border-slate-200 rounded-xl bg-white text-center hover:border-blue-400 transition-colors">
+                        <div class="text-2xl font-bold text-slate-800 mb-1">Next.js</div>
+                        <div class="text-xs font-semibold text-blue-600 mb-3 bg-blue-50 py-1 px-2 rounded inline-block">FRONT-END</div>
+                        <p class="text-xs text-slate-500 text-left">SSG (Static Site Generation) untuk *loading* Landing Page instan.</p>
+                    </div>
+                    <div class="p-5 border border-slate-200 rounded-xl bg-white text-center hover:border-blue-400 transition-colors">
+                        <div class="text-2xl font-bold text-slate-800 mb-1">Tailwind</div>
+                        <div class="text-xs font-semibold text-indigo-600 mb-3 bg-indigo-50 py-1 px-2 rounded inline-block">STYLING UI</div>
+                        <p class="text-xs text-slate-500 text-left">Framework CSS untuk membangun komponen yang 100% responsif.</p>
+                    </div>
+                    <div class="p-5 border border-slate-200 rounded-xl bg-white text-center hover:border-blue-400 transition-colors">
+                        <div class="text-2xl font-bold text-slate-800 mb-1">Express.js</div>
+                        <div class="text-xs font-semibold text-teal-600 mb-3 bg-teal-50 py-1 px-2 rounded inline-block">BACK-END API</div>
+                        <p class="text-xs text-slate-500 text-left">Menangani logika bisnis, *routing* CMS, dan *security authentication*.</p>
+                    </div>
+                    <div class="p-5 border border-slate-200 rounded-xl bg-white text-center hover:border-blue-400 transition-colors">
+                        <div class="text-2xl font-bold text-slate-800 mb-1">NoSQL / SQL</div>
+                        <div class="text-xs font-semibold text-rose-600 mb-3 bg-rose-50 py-1 px-2 rounded inline-block">DATABASE</div>
+                        <p class="text-xs text-slate-500 text-left">Penyimpanan data harga, foto, dan konfigurasi yang terenkripsi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="linimasa" class="scroll-mt-12">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">5. Linimasa Proyek (Project Timeline)</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Estimasi waktu penyelesaian proyek adalah <strong>4 Minggu (1 Bulan)</strong>. Kami mendesain proses kerja yang transparan. Klik pada setiap minggu di struktur diagram di bawah ini untuk melihat rincian pekerjaan yang akan diselesaikan pada fase tersebut.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-full md:w-1/3 relative border-l-2 border-slate-200 ml-3">
+                        <div class="mb-8 relative cursor-pointer group" onclick="showTimelineDetail(1)">
+                            <div id="node-1" class="timeline-node active absolute -left-[17px] top-1 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center text-xs font-bold shadow-md">1</div>
+                            <div class="pl-8">
+                                <h4 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Minggu 1</h4>
+                                <p class="text-sm text-slate-500">Riset & Desain UI</p>
+                            </div>
+                        </div>
+                        <div class="mb-8 relative cursor-pointer group" onclick="showTimelineDetail(2)">
+                            <div id="node-2" class="timeline-node bg-slate-200 text-slate-500 absolute -left-[17px] top-1 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center text-xs font-bold shadow-sm group-hover:bg-blue-400 group-hover:text-white transition-colors">2</div>
+                            <div class="pl-8">
+                                <h4 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Minggu 2</h4>
+                                <p class="text-sm text-slate-500">Front-End Dev</p>
+                            </div>
+                        </div>
+                        <div class="mb-8 relative cursor-pointer group" onclick="showTimelineDetail(3)">
+                            <div id="node-3" class="timeline-node bg-slate-200 text-slate-500 absolute -left-[17px] top-1 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center text-xs font-bold shadow-sm group-hover:bg-blue-400 group-hover:text-white transition-colors">3</div>
+                            <div class="pl-8">
+                                <h4 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Minggu 3</h4>
+                                <p class="text-sm text-slate-500">Back-End & CMS</p>
+                            </div>
+                        </div>
+                        <div class="relative cursor-pointer group" onclick="showTimelineDetail(4)">
+                            <div id="node-4" class="timeline-node bg-slate-200 text-slate-500 absolute -left-[17px] top-1 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center text-xs font-bold shadow-sm group-hover:bg-blue-400 group-hover:text-white transition-colors">4</div>
+                            <div class="pl-8">
+                                <h4 class="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors">Minggu 4</h4>
+                                <p class="text-sm text-slate-500">Finalisasi & Deploy</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/3">
+                        <div class="bg-slate-50 rounded-xl p-6 h-full border border-slate-200 flex flex-col justify-center">
+                            <div id="timeline-detail-content">
+                                <div class="text-blue-600 text-sm font-bold uppercase tracking-wider mb-2">Fase 1 Pekerjaan</div>
+                                <h3 class="text-2xl font-bold text-slate-900 mb-4">Asset Gathering & Konsep Desain</h3>
+                                <p class="text-slate-600">Pengumpulan materi properti (foto berkualitas tinggi, daftar harga, deskripsi fasilitas). Pembuatan *wireframe* dan desain antarmuka (UI/UX) untuk modul Landing Page dan Dashboard Admin untuk disetujui sebelum proses coding dimulai.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="investasi" class="scroll-mt-12">
+                <div class="mb-8 text-center md:text-left">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">6. Investasi & Ketentuan</h2>
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        Ringkasan nilai investasi pengembangan sistem penuh (Bundle B) dan mekanisme pembayaran untuk memulai proyek.
+                    </p>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-900 to-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+                    <!-- Decorative background element -->
+                    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-500 opacity-20 blur-3xl"></div>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-center relative z-10">
+                        <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                            <div class="inline-block bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+                                Bundle B: Full Management
+                            </div>
+                            <h3 class="text-4xl font-bold mb-2">Rp 3.500.000</h3>
+                            <p class="text-blue-200 text-sm mb-6">*Harga sudah termasuk domain .com dan hosting/server untuk tahun pertama.</p>
+                            
+                            <div class="space-y-4 text-sm text-slate-300 border-t border-slate-700 pt-6">
+                                <div class="flex justify-between items-center">
+                                    <span>Termin 1 (50% Down Payment)</span>
+                                    <span class="font-bold text-white">Rp 1.750.000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span>Termin 2 (50% Pelunasan Paska Deploy)</span>
+                                    <span class="font-bold text-white">Rp 1.750.000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-2/5 bg-white/10 backdrop-blur p-6 rounded-2xl border border-white/20">
+                            <h4 class="font-bold text-lg mb-3">Persetujuan Dokumen</h4>
+                            <p class="text-sm text-slate-300 mb-6">
+                                Dokumen PID ini disusun untuk memastikan keselarasan ekspektasi antara pengembang dan pemilik bisnis Kost sebelum pengerjaan sistem dimulai.
+                            </p>
+                            <button class="w-full py-3 bg-white text-blue-900 font-bold rounded-xl hover:bg-blue-50 transition-colors shadow-lg" onclick="alert('Ini adalah tombol simulasi. Dalam implementasi nyata, tombol ini akan mengirimkan notifikasi persetujuan via Email/WhatsApp.')">
+                                Setujui & Mulai Proyek
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // --- 1. Navigation Highlighting Logic ---
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // --- 2. Features Tab Logic ---
+        function switchTab(tabName) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            // Remove active state from all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+                el.classList.replace('text-blue-600', 'text-slate-500');
+            });
+
+            // Show selected content
+            const contentId = `tab-${tabName}`;
+            document.getElementById(contentId).classList.remove('hidden');
+            document.getElementById(contentId).classList.add('block');
+
+            // Add active state to clicked button
+            const activeBtn = event.currentTarget;
+            activeBtn.classList.add('active');
+            activeBtn.classList.replace('text-slate-500', 'text-blue-600');
+        }
+
+        // --- 3. Timeline Logic (State & Interaction) ---
+        const timelineData = {
+            1: {
+                phase: "Fase 1 Pekerjaan",
+                title: "Asset Gathering & Konsep Desain",
+                desc: "Pengumpulan materi properti (foto berkualitas tinggi, daftar harga, deskripsi fasilitas). Pembuatan <i>wireframe</i> dan desain antarmuka (UI/UX) untuk modul Landing Page dan Dashboard Admin untuk disetujui sebelum proses coding dimulai."
+            },
+            2: {
+                phase: "Fase 2 Pekerjaan",
+                title: "Next.js Development",
+                desc: "Memulai proses <i>coding Front-end</i> untuk Landing Page penyewa menggunakan Next.js. Fokus pada optimasi gambar, penyusunan komponen Tailwind yang responsif, dan pengujian kecepatan loading awal."
+            },
+            3: {
+                phase: "Fase 3 Pekerjaan",
+                title: "Admin Setup & Database",
+                desc: "Pembangunan <i>Back-end</i> API menggunakan Express.js dan pengaturan Database. Pembuatan CMS untuk Harga/Galeri, dan sistem form untuk menginput Tag Google Ads (AW-XXX) yang tersinkronisasi."
+            },
+            4: {
+                phase: "Fase 4 Pekerjaan",
+                title: "Final Testing & Launching",
+                desc: "Tahap <i>Quality Assurance (QA)</i>. Pengujian integrasi Google Ads Tracking dengan melakukan uji klik tombol WhatsApp. Setelah lolos uji, sistem di-<i>deploy</i> ke server produksi (Live)."
+            }
+        };
+
+        function showTimelineDetail(step) {
+            // Update UI Nodes
+            document.querySelectorAll('.timeline-node').forEach(node => {
+                node.classList.remove('active');
+                node.classList.add('bg-slate-200', 'text-slate-500');
+                node.classList.remove('bg-blue-600', 'text-white');
+            });
+            const activeNode = document.getElementById(`node-${step}`);
+            activeNode.classList.add('active', 'bg-blue-600', 'text-white');
+            activeNode.classList.remove('bg-slate-200', 'text-slate-500');
+
+            // Update Content
+            const content = timelineData[step];
+            const container = document.getElementById('timeline-detail-content');
+            
+            // Simple fade animation logic
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="text-blue-600 text-sm font-bold uppercase tracking-wider mb-2">${content.phase}</div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">${content.title}</h3>
+                    <p class="text-slate-600">${content.desc}</p>
+                `;
+                container.style.transition = 'opacity 0.3s ease-in';
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        // --- 4. Chart.js Analytics Simulation ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            
+            // Simulated Data (14 Days)
+            const labels = ['H-14', 'H-13', 'H-12', 'H-11', 'H-10', 'H-9', 'H-8', 'H-7', 'H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Hari Ini'];
+            const impressions = [300, 350, 400, 380, 500, 600, 450, 520, 700, 800, 750, 900, 850, 1000];
+            const clicks = [15, 18, 25, 20, 35, 45, 30, 40, 60, 75, 70, 95, 85, 110];
+            const waConversions = [2, 3, 3, 2, 5, 8, 4, 7, 10, 15, 12, 18, 16, 25];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Leads (Klik WA)',
+                            data: waConversions,
+                            borderColor: '#2563eb', // Blue-600
+                            backgroundColor: '#2563eb',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                            pointBackgroundColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Klik Iklan',
+                            data: clicks,
+                            backgroundColor: 'rgba(99, 102, 241, 0.8)', // Indigo-500
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Tayangan Iklan',
+                            data: impressions,
+                            backgroundColor: 'rgba(203, 213, 225, 0.4)', // Slate-300
+                            borderRadius: 4,
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // CRITICAL for chart-container constraint
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                font: { family: "'Inter', sans-serif" }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: "'Inter', sans-serif", size: 13 },
+                            bodyFont: { family: "'Inter', sans-serif", size: 13 },
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Inter', sans-serif", size: 11 } }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Volume (Tayangan/Klik)',
+                                font: { family: "'Inter', sans-serif", size: 11 }
+                            },
+                            grid: { color: 'rgba(241, 245, 249, 1)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Jumlah Leads (WA)',
+                                color: '#2563eb',
+                                font: { family: "'Inter', sans-serif", size: 11, weight: 'bold' }
+                            },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
